@@ -1,1 +1,1 @@
-Dokumentacja konfiguracji nazwy systemu i adresacji
+Dokumentacja konfiguracji nazwy systemu, adresacji i czasu systemowego
