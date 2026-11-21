@@ -12,46 +12,46 @@ Kompleksowe laboratorium inżynieryjne symulujące produkcyjną infrastrukturę 
 | :--- | :--- | :--- | :--- | :--- |
 | **`CORP-DC01`** | Primary Domain Controller, DNS, Global Catalog, posiadacz ról FSMO | `192.168.20.10/24` | `127.0.0.1` | 2 vCPU, 4 GB RAM |
 | **`CORP-DC02`** | Secondary Domain Controller, DNS, Global Catalog (High Availability) | `192.168.20.11/24` | `192.168.20.10` | 2 vCPU, 4 GB RAM |
-| **`CORP-FS01`** *(Planowane)* | Member Server – File Server (SMB, NTFS, DFS), Print & DHCP Server | `192.168.20.20/24` | `192.168.20.10` | 2 vCPU, 2 GB RAM |
-| **`CORP-WS01`** *(Planowane)* | Stacja robocza Windows 10/11 Enterprise do testów GPO i logowania | `192.168.20.100/24` | `192.168.20.10` | 2 vCPU, 4 GB RAM |
+| **`CORP-FS01`** | Member Server – File Server (SMB, NTFS, DFS), Print & DHCP Server | `192.168.20.20/24` | `192.168.20.10` | 2 vCPU, 2 GB RAM |
+| **`CORP-WS01`** | Stacja robocza Windows 10/11 Enterprise do testów GPO i logowania | `192.168.20.100/24` | `192.168.20.10` | 2 vCPU, 4 GB RAM |
 
 * **Nazwa lasu i domeny:** `corp.homelab.local` (NetBIOS: `CORP`)
 * **System operacyjny serwerów:** Windows Server (Desktop Experience)
 
 ---
 
-## Mapa projektu i plan laboratoriów
+## Mapa projektu i laboratoria
 
 ### Moduł I: Architektura wirtualizacji i sieć bazowa
-* **[01. Inicjalizacja środowiska i sieci (Lab Bootstrap)](./01-lab-bootstrap/README.md)** *(Ukończono)*
+* **[1.Initial configuration](./1.Initial%20configuration/README.md)**
   * Budowa izolowanej sieci wewnętrznej (`TIER0-SERVERS`), instalacja bazowego systemu Windows Server, standaryzacja nazw hostów (`Rename-Computer`) oraz konfiguracja statycznej adresacji IPv4.
 
 ### Moduł II: Active Directory Core & Identity
-* **[02. Wdrożenie pierwszego Kontrolera Domeny (AD DS) oraz usługi DNS](./02-ad-dns-deployment/README.md)** *(Ukończono)*
+* **[2.Active Directory and DNS configuration](./2.Active%20Directory%20and%20DNS%20configuration/README.md)**
   * Instalacja ról AD DS i DNS, utworzenie nowego lasu `corp.homelab.local`, konfiguracja stref zintegrowanych z AD oraz weryfikacja rekordów `SRV` i udziałów `SYSVOL`/`NETLOGON`.
-* **[03. Wysoka dostępność – wdrożenie drugiego Kontrolera Domeny (`DC02`)](./03-high-availability-dc02/README.md)** *(Ukończono)*
+* **[3.Adding a second domain controller](./3.Adding%20a%20second%20domain%20controller/README.md)**
   * Promocja drugiego kontrolera w istniejącej domenie, konfiguracja replikacji Multi-Master bazy `NTDS` oraz synchronizacji plików przez silnik DFSR (`repadmin /replsummary`).
-* **[04. Zarządzanie rolami FSMO oraz diagnostyka replikacji i czasu](./04-fsmo-roles-management/README.md)** *(Ukończono)*
+* **[4.Active Directory FSMO Roles Transfer](./4.Active%20Directory%20FSMO%20Roles%20Transfer/README.md)**
   * Weryfikacja i kontrolowany transfer wszystkich 5 ról FSMO w PowerShell (`Move-ADDirectoryServerOperationMasterRole`), analiza różnic **Transfer vs Seizure** oraz usunięcie awarii RPC (`8207`) wywołanej rozbieżnością stref czasowych (Kerberos Clock Skew).
-* **[05. Architektura Jednostek Organizacyjnych (OU) i Model Bezpieczeństwa Tiering](./05-ou-structure-tiering-model/README.md)** *(W trakcie)*
+* **[5.Organizational Units and Tiering Model](./5.Organizational%20Units%20and%20Tiering%20Model/README.md)**
   * Projektowanie hierarchii OU (Tier 0 / Tier 1 / Tier 2), wdrożenie zasady najmniejszych uprawnień (Least Privilege), delegacja uprawnień dla zespołu Helpdesk (AGDLP) oraz izolacja kont administracyjnych.
 
 ### Moduł III: Group Policy Objects (GPO) & Hardening
-* **[06. Wdrażanie i diagnostyka polis grupowych (GPO)](./06-group-policy-management/README.md)**
+* **[6.Group Policy Management and Diagnostics](./6.Group%20Policy%20Management%20and%20Diagnostics/README.md)**
   * Konfiguracja zasad haseł (Fine-Grained Password Policies), mapowanie dysków sieciowych, ograniczenia dostępu do Panelu Sterowania/USB, kolejność przetwarzania (LSDOU) oraz diagnostyka za pomocą `gpupdate` i `gpresult`.
-* **[07. Security Hardening i ochrona uwierzytelniania](./07-security-hardening/README.md)**
+* **[7.Security Hardening and Authentication Protection](./7.Security%20Hardening%20and%20Authentication%20Protection/README.md)**
   * Wdrożenie Windows Defender Firewall przez GPO, wyłączenie przestarzałych protokołów (SMBv1, NTLMv1), ochrona kont uprzywilejowanych (Protected Users) oraz włączenie audytu zdarzeń bezpieczeństwa w Event Viewer.
 
 ### Moduł IV: Usługi Sieciowe i Serwery Plików (Member Servers)
-* **[08. Wdrożenie serwera plikowego (`CORP-FS01`) i uprawnień NTFS/SMB](./08-file-server-ntfs-smb/README.md)**
+* **[8.File Server Deployment and NTFS SMB Permissions](./8.File%20Server%20Deployment%20and%20NTFS%20SMB%20Permissions/README.md)**
   * Dołączenie serwera członkowskiego do domeny, konfiguracja udziałów sieciowych, wdrożenie Access-Based Enumeration (ABE), dysków kwotowych (FSRM) oraz rozwiązywanie konfliktów uprawnień Share vs NTFS.
-* **[09. Usługi sieciowe: DHCP High Availability (Failover) oraz zaawansowany DNS](./09-dhcp-failover-dns/README.md)**
+* **[9.DHCP Failover and Advanced DNS Configuration](./9.DHCP%20Failover%20and%20Advanced%20DNS%20Configuration/README.md)**
   * Konfiguracja pul adresowych DHCP w trybie Load Balance / Hot Standby, rezerwacje adresów MAC, konfiguracja DNS Reverse Lookup Zones (rekordy PTR) oraz Conditional Forwarders.
 
 ### Moduł V: Automatyzacja PowerShell i Disaster Recovery
-* **[10. Automatyzacja onboardingu użytkowników w PowerShell](./10-powershell-automation/README.md)**
+* **[10.PowerShell User Onboarding Automation](./10.PowerShell%20User%20Onboarding%20Automation/README.md)**
   * Tworzenie skryptów masowego importu pracowników z plików `.csv`, automatycznego przypisywania do grup i jednostek OU oraz raportowania nieaktywnych kont w Active Directory.
-* **[11. Backup, odzyskiwanie obiektów (AD Recycle Bin) i Disaster Recovery](./11-backup-disaster-recovery/README.md)**
+* **[11.Active Directory Backup and Disaster Recovery](./11.Active%20Directory%20Backup%20and%20Disaster%20Recovery/README.md)**
   * Włączenie kosza Active Directory, przywracanie przypadkowo usuniętych obiektów, kopie zapasowe stanu systemu (Windows Server Backup) oraz przywracanie autorytatywne i nieautorytatywne bazy NTDS w trybie DSRM.
 
 ---
